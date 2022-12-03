@@ -1,6 +1,7 @@
 package com.vr.miniautorizador.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,19 +22,23 @@ public class CartaoController {
 	private CartaoService cartaoService;
 	
 	@PostMapping
-	public ResponseEntity<CartaoDTO> salvar(@RequestBody CartaoDTO cartao) {
-		if (this.cartaoService.salvar(cartao) == null) {
+	public ResponseEntity<CartaoDTO> criar(@RequestBody CartaoDTO cartao) {
+		try {
+			CartaoDTO cartaoSalvo = this.cartaoService.criar(cartao);
+			return ResponseEntity.status(HttpStatus.CREATED).body(cartaoSalvo); 
+		} catch (DataIntegrityViolationException e) {
 			return ResponseEntity.status(422).body(cartao);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(cartao);
 	}
 	
 	@GetMapping(value = "/{numeroCartao}")
 	public ResponseEntity<Double> recuperarSaldo(@PathVariable String numeroCartao) {
-		var saldo = this.cartaoService.recuperarSaldo(numeroCartao);
-		if (saldo == null) {
+		try {
+			Double saldo = this.cartaoService.recuperarSaldo(numeroCartao);
+			return ResponseEntity.ok(saldo);
+		} catch (NullPointerException e) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(saldo);
+
 	}
 }

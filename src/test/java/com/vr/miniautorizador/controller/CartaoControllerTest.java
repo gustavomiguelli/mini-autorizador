@@ -53,7 +53,7 @@ public class CartaoControllerTest {
 			.perform(MockMvcRequestBuilders
 					.get(uri))
 			.andExpect(MockMvcResultMatchers
-						.status().is(HttpStatus.SC_OK))
+						.status().is2xxSuccessful())
 			.andExpect(MockMvcResultMatchers
 						.content().json("500.0"));
 	}
@@ -61,7 +61,7 @@ public class CartaoControllerTest {
 	
 	@Test
 	@Order(3)
-	public void deveRetornar422_QuandoSalvarCartao() throws Exception  {
+	public void deveRetornar422_QuandoSalvarCartaoJaExistente() throws Exception  {
 		URI uri = new URI("/cartoes");
 		String json = "{\"numeroCartao\": \"5549873025634505\", \"senha\": \"12345\"}";
 		
@@ -81,7 +81,7 @@ public class CartaoControllerTest {
 	
 	@Test
 	@Order(4)
-	public void deveRetornarNotFound_QuandoBuscarSaldo() throws Exception {
+	public void deveRetornarNotFound_QuandoBuscarSaldoCartaoInexistente() throws Exception {
 		
 		URI uri = new URI("/cartoes/5549873025634506");
 		

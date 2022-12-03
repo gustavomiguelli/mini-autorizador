@@ -1,5 +1,7 @@
 package com.vr.miniautorizador.model;
 
+import com.vr.miniautorizador.dto.CartaoDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +17,7 @@ public class Cartao {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String numeroCartao;
 	
 	@Column(nullable = false)
@@ -56,6 +58,13 @@ public class Cartao {
 
 	public void setSaldo(Double saldo) {
 		this.saldo = saldo;
+	}
+
+	public CartaoDTO converterToDTO() {
+		CartaoDTO cartaoDTO = new CartaoDTO();
+		cartaoDTO.setNumeroCartao(this.getNumeroCartao());
+		cartaoDTO.setSenha(getSenha());
+		return cartaoDTO;
 	}
 	
 	
