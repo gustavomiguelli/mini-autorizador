@@ -1,8 +1,11 @@
 package com.vr.miniautorizador.service;
 
+import javax.management.BadAttributeValueExpException;
+
 import org.springframework.dao.DataIntegrityViolationException;
 
 import com.vr.miniautorizador.dto.CartaoDTO;
+import com.vr.miniautorizador.dto.TransacaoDTO;
 
 
 public interface CartaoService  {
@@ -11,4 +14,6 @@ public interface CartaoService  {
 
 	Double recuperarSaldo(String numeroCartao) throws NullPointerException;
 	
+	void efetuarTransacao(TransacaoDTO transacao) throws BadAttributeValueExpException, UnsupportedOperationException, NullPointerException;
+
 }

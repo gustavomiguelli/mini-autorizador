@@ -3,8 +3,8 @@ package com.vr.miniautorizador.dto;
 public class TransacaoDTO  {
 	
 	private String numeroCartao;
-	private String senha;
-	private Double value;
+	private String senhaCartao;
+	private Double valor;
 	
 	public String getNumeroCartao() {
 		return numeroCartao;
@@ -12,17 +12,17 @@ public class TransacaoDTO  {
 	public void setNumeroCartao(String numeroCartao) {
 		this.numeroCartao = numeroCartao;
 	}
-	public String getSenha() {
-		return senha;
+	public String getSenhaCartao() {
+		return senhaCartao;
 	}
-	public void setSenha(String senha) {
-		this.senha = senha;
+	public void setSenhaCartao(String senhaCartao) {
+		this.senhaCartao = senhaCartao;
 	}
-	public Double getValue() {
-		return value;
+	public Double getValor() {
+		return valor;
 	}
-	public void setValue(Double value) {
-		this.value = value;
+	public void setValor(Double valor) {
+		this.valor = valor;
 	}
 	
 }

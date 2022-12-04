@@ -1,13 +1,13 @@
 package com.vr.miniautorizador.model;
 
-import com.vr.miniautorizador.dto.CartaoDTO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.vr.miniautorizador.dto.CartaoDTO;
 
 @Entity
 @Table(name = "cartao")
@@ -23,7 +23,7 @@ public class Cartao {
 	@Column(nullable = false)
 	private String senha;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition="Decimal(10,2)")
 	private Double saldo;
 	
 	
