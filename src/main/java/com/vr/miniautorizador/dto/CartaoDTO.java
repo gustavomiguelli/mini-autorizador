@@ -2,6 +2,17 @@ package com.vr.miniautorizador.dto;
 
 import com.vr.miniautorizador.model.Cartao;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class CartaoDTO {
 	
 	
@@ -13,18 +24,6 @@ public class CartaoDTO {
 		return numeroCartao;
 	}
 
-	public void setNumeroCartao(String numeroCartao) {
-		this.numeroCartao = numeroCartao;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-	
 
 	public Cartao converterToModel() {
 		Cartao cartao = new Cartao();

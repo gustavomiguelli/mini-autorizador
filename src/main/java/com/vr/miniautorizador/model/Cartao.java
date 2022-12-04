@@ -9,6 +9,17 @@ import javax.persistence.Table;
 
 import com.vr.miniautorizador.dto.CartaoDTO;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "cartao")
 public class Cartao {
@@ -25,40 +36,6 @@ public class Cartao {
 	
 	@Column(nullable = false, columnDefinition="Decimal(10,2)")
 	private Double saldo;
-	
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public String getNumeroCartao() {
-		return numeroCartao;
-	}
-	
-	public void setNumeroCartao(String numeroCartao) {
-		this.numeroCartao = numeroCartao;
-	}
-	
-	public String getSenha() {
-		return senha;
-	}
-	
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-	
-	
-	public Double getSaldo() {
-		return saldo;
-	}
-
-	public void setSaldo(Double saldo) {
-		this.saldo = saldo;
-	}
 
 	public CartaoDTO converterToDTO() {
 		CartaoDTO cartaoDTO = new CartaoDTO();

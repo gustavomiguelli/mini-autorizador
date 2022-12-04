@@ -1,5 +1,12 @@
 package com.vr.miniautorizador.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class TransacaoDTO  {
 	
 	private String numeroCartao;
