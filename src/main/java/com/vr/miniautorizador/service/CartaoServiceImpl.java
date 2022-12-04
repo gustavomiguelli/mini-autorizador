@@ -29,24 +29,25 @@ public class CartaoServiceImpl implements CartaoService {
 	}
 	
 	public Double recuperarSaldo(String numeroCartao) throws NullPointerException {
-		
 		return cartaoRepository.findByNumeroCartao(numeroCartao).getSaldo();
 	}
 	
-	
-	@Transactional(isolation = Isolation.SERIALIZABLE)
+	//Isolotion do tipo READ_COMMITTED impede leituras sujas,
+	// o que viria a impedir que um débito fosse efetuado enquanto
+	// uma transação ativa em outra instância ainda não tivesse sido concluída
+	@Transactional(isolation = Isolation.READ_COMMITTED)
 	public void efetuarTransacao(TransacaoDTO transacaoDTO) throws BadAttributeValueExpException, UnsupportedOperationException {
-		this.recuperarSaldo(transacaoDTO.getNumeroCartao());
+		this.verificarCartaoExistente(transacaoDTO.getNumeroCartao());
 		this.autenticarCartao(transacaoDTO.getNumeroCartao(), transacaoDTO.getSenhaCartao());
 		Cartao cartao = this.recuperarCartaoParaDebitoSeSaldoMaiorValor(transacaoDTO.getNumeroCartao(), transacaoDTO.getValor());
 		Double novoSaldo = cartao.getSaldo() - transacaoDTO.getValor();
 		cartao.setSaldo(novoSaldo);
-		this.atualizarCartao(cartao);
+		cartaoRepository.save(cartao);
 	}
 	
-	public CartaoDTO atualizarCartao(Cartao cartao) {
-		Cartao cartaoSalvo = cartaoRepository.save(cartao);
-		return cartaoSalvo.converterToDTO();
+	private void verificarCartaoExistente(String numeroCartao) {
+		this.recuperarSaldo(numeroCartao);
+		
 	}
 
 	public Double autenticarCartao(String numeroCartao, String senha) throws BadAttributeValueExpException {
