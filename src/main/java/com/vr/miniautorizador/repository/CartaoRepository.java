@@ -16,7 +16,7 @@ public interface CartaoRepository extends CrudRepository<Cartao, Long>{
 	@Query("Select c from Cartao c where c.numeroCartao = :numeroCartao and c.senha = :senha")
 	Cartao findByNumeroAndSenha(@Param(value = "numeroCartao") String numeroCartao, @Param(value = "senha") String senha);
 	
-	@Query("Select c from Cartao c where c.numeroCartao = :numeroCartao and c.saldo > :valor")
+	@Query("Select c from Cartao c where c.numeroCartao = :numeroCartao and c.saldo >= :valor")
 	Cartao findByNumeroCartaoIfSaldoMaiorValor(@Param(value = "numeroCartao") String numeroCartao, @Param(value = "valor") Double valor);
 	
 	

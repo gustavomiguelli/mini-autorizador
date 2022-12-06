@@ -58,6 +58,29 @@
 		</dependency>
 
 	</dependencies>
+	
+	<profiles>
+		<profile>
+			<id>local</id>
+			<build>
+				<filters>
+					<filter>application-local.properties</filter>
+				</filters>
+			</build>			
+		</profile>
+
+		<profile>
+			<id>deploy-container</id>
+			<build>
+				<filters>
+					<filter>application-deploy-container.properties</filter>
+				</filters>
+			</build>			
+			<properties>
+				<activeProfile>deploy-container</activeProfile>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>

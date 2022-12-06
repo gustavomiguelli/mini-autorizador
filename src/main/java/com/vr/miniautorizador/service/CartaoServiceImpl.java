@@ -1,12 +1,12 @@
 package com.vr.miniautorizador.service;
 
+import java.util.Optional;
+
 import javax.management.BadAttributeValueExpException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.vr.miniautorizador.dto.CartaoDTO;
 import com.vr.miniautorizador.dto.TransacaoDTO;
@@ -18,6 +18,7 @@ import com.vr.miniautorizador.repository.CartaoRepository;
 public class CartaoServiceImpl implements CartaoService {
 	
 	private static final double SALDO_INICIAL_CARTAO = 500.00;
+	
 	@Autowired
 	private CartaoRepository cartaoRepository;
 	
@@ -32,17 +33,17 @@ public class CartaoServiceImpl implements CartaoService {
 		return cartaoRepository.findByNumeroCartao(numeroCartao).getSaldo();
 	}
 	
-	//Isolotion do tipo READ_COMMITTED impede leituras sujas,
-	// o que viria a impedir que um débito fosse efetuado enquanto
-	// uma transação ativa em outra instância ainda não tivesse sido concluída
-	@Transactional(isolation = Isolation.READ_COMMITTED)
 	public void efetuarTransacao(TransacaoDTO transacaoDTO) throws BadAttributeValueExpException, UnsupportedOperationException {
-		this.verificarCartaoExistente(transacaoDTO.getNumeroCartao());
-		this.autenticarCartao(transacaoDTO.getNumeroCartao(), transacaoDTO.getSenhaCartao());
-		Cartao cartao = this.recuperarCartaoParaDebitoSeSaldoMaiorValor(transacaoDTO.getNumeroCartao(), transacaoDTO.getValor());
+		Cartao cartao = validarCartao(transacaoDTO);
 		Double novoSaldo = cartao.getSaldo() - transacaoDTO.getValor();
 		cartao.setSaldo(novoSaldo);
 		cartaoRepository.save(cartao);
+	}
+
+	private Cartao validarCartao(TransacaoDTO transacaoDTO) throws BadAttributeValueExpException, UnsupportedOperationException, NullPointerException {
+		this.verificarCartaoExistente(transacaoDTO.getNumeroCartao());
+		this.autenticarCartao(transacaoDTO.getNumeroCartao(), transacaoDTO.getSenhaCartao());
+		return this.recuperarCartaoParaDebitoSeSaldoMaiorValor(transacaoDTO.getNumeroCartao(), transacaoDTO.getValor());
 	}
 	
 	private void verificarCartaoExistente(String numeroCartao) {
@@ -50,22 +51,16 @@ public class CartaoServiceImpl implements CartaoService {
 		
 	}
 
-	public Double autenticarCartao(String numeroCartao, String senha) throws BadAttributeValueExpException {
-		try {
-			return cartaoRepository.findByNumeroAndSenha(numeroCartao, senha).getSaldo();
-		} catch (NullPointerException e) {
-			throw new BadAttributeValueExpException(senha);
-		}
+	public void autenticarCartao(String numeroCartao, String senha) throws BadAttributeValueExpException {
+			 Optional
+					.ofNullable(cartaoRepository.findByNumeroAndSenha(numeroCartao, senha))
+					.orElseThrow(() -> new BadAttributeValueExpException(senha));
 	}
 	
 	public Cartao recuperarCartaoParaDebitoSeSaldoMaiorValor(String numeroCartao, Double valor) throws UnsupportedOperationException {
-		try {
-			cartaoRepository.findByNumeroCartaoIfSaldoMaiorValor(numeroCartao, valor).getSaldo();
-			return cartaoRepository.findByNumeroCartaoIfSaldoMaiorValor(numeroCartao, valor);
-		} catch (NullPointerException e) {
-			throw new UnsupportedOperationException();
-		}
-		
+			return Optional
+					.ofNullable(cartaoRepository.findByNumeroCartaoIfSaldoMaiorValor(numeroCartao, valor))
+					.orElseThrow(() -> new UnsupportedOperationException());
 	}
 
 }
